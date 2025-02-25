@@ -20,7 +20,17 @@
     <tr>
       <td align="center">Lê Trường Hòa</td>
       <td align="center">23520504</td>
-      <td align="center">https://github.com/AkaDNT</td>
+      <td align="center">https://github.com</td>
+    </tr>
+    <tr>
+      <td align="center">Lê Nguyễn Minh Thư</td>
+      <td align="center">23521539</td>
+      <td align="center">https://github.com</td>
+    </tr>
+    <tr>
+      <td align="center">Lê Anh Thư</td>
+      <td align="center">23521536</td>
+      <td align="center">https://github.com</td>
     </tr>
   </table>
 </div>
