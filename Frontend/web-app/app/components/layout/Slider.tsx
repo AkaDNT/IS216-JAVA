@@ -106,7 +106,7 @@ const Slider = () => {
         </div>
       </div>
 
-      {/* Navigation buttons ở giữa dưới cùng */}
+      {/* Navigation buttons */}
       <div className="absolute bottom-4 left-0 right-0 flex justify-center items-center space-x-4">
         <button
           onClick={prevSlide}
