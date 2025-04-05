@@ -1,4 +1,8 @@
 package com.rgbunny.dao;
 
-public interface BookRepository {
+
+import com.rgbunny.entity.Book;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface BookRepository extends JpaRepository<Book, Long> {
 }

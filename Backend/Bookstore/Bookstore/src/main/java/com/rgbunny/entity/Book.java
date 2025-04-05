@@ -6,9 +6,9 @@ import lombok.Data;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "book")
+@Table(name = "Book")
 @Data
-public class book {
+public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -30,11 +30,9 @@ public class book {
     @Column(name = "language")
     private String language;
     @Column(name = "readingAge")
-    private int readingAge;
+    private Integer readingAge;
     @Column(name = "pages")
-    private int pages;
+    private Integer pages;
     @Column(name = "dimension")
     private String dimension;
-    @Column(name = "image")
-    private String image;
 }
