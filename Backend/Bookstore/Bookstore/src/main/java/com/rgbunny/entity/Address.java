@@ -29,6 +29,6 @@ public class Address {
     @Size(min = 4, message = "Tên thành phố phải có ít nhất 4 ký tự!")
     private String city;
 
-    @ManyToMany(mappedBy = "Address")
+    @ManyToMany(mappedBy = "addresses")
     private List<User> users = new ArrayList<>();
 }
