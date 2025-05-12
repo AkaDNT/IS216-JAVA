@@ -1,5 +1,7 @@
 package com.rgbunny.exceptions;
 
+import com.rgbunny.security.response.MessageResponse;
+import com.rgbunny.security.services.EmailServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -23,6 +25,11 @@ public class MyGlobalExceptionHandler {
         });
         return new ResponseEntity<Map<String,String>>(response,
                 HttpStatus.BAD_REQUEST);
+    }
+    @ExceptionHandler(EmailServiceImpl.EmailSendingException.class)
+    public ResponseEntity<?> handleEmailException(EmailServiceImpl.EmailSendingException ex) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new MessageResponse("Error sending email"));
     }
 }
 

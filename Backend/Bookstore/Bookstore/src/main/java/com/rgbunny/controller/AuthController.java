@@ -7,10 +7,12 @@ import com.rgbunny.entity.Role;
 import com.rgbunny.entity.User;
 import com.rgbunny.security.jwt.JwtUtils;
 import com.rgbunny.security.request.LoginRequest;
+import com.rgbunny.security.request.ResetPasswordRequest;
 import com.rgbunny.security.request.SignupRequest;
 import com.rgbunny.security.response.LoginResponse;
 import com.rgbunny.security.response.MessageResponse;
 import com.rgbunny.security.services.UserDetailsImpl;
+import com.rgbunny.security.services.EmailServiceImpl;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -46,6 +48,9 @@ public class AuthController {
 
     @Autowired
     RoleRepository roleRepository;
+
+    @Autowired
+    private EmailServiceImpl emailService;
 
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
@@ -120,5 +125,62 @@ public class AuthController {
         user.setRoles(roles);
         userRepository.save(user);
         return ResponseEntity.ok(new MessageResponse("User register successfully"));
+    }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<?> forgotPassword(@RequestBody Map<String, String> request) {
+        String email = request.get("email");
+        Optional<User> userOptional = userRepository.findByEmail(email);
+
+        try {
+            if (userOptional.isPresent()) {
+                User user = userOptional.get();
+                String token = UUID.randomUUID().toString();
+
+                // Set token expiry to 1 hour
+                Calendar calendar = Calendar.getInstance();
+                calendar.add(Calendar.HOUR_OF_DAY, 1);
+                user.setResetPasswordToken(token);
+                user.setResetPasswordExpiry(calendar.getTime());
+                userRepository.save(user);
+
+                emailService.sendPasswordResetEmail(user.getEmail(), token);
+            }
+        } catch (EmailServiceImpl.EmailSendingException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new MessageResponse("Error sending reset email"));
+        }
+
+        // Always return success to prevent email enumeration
+        return ResponseEntity.ok(new MessageResponse("If your email exists, you'll receive a password reset link"));
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<?> resetPassword(@RequestBody ResetPasswordRequest request) {
+        // Validate input
+        if (request.getNewPassword() == null || request.getNewPassword().length() < 6) {
+            return ResponseEntity.badRequest()
+                    .body(new MessageResponse("Password must be at least 6 characters"));
+        }
+
+        Optional<User> userOptional = userRepository.findByResetPasswordToken(request.getToken());
+        if (userOptional.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new MessageResponse("Invalid or expired reset token"));
+        }
+
+        User user = userOptional.get();
+        if (user.getResetPasswordExpiry().before(new Date())) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new MessageResponse("Reset token has expired"));
+        }
+
+        // Update password
+        user.setPassword(encoder.encode(request.getNewPassword()));
+        user.setResetPasswordToken(null);
+        user.setResetPasswordExpiry(null);
+        userRepository.save(user);
+
+        return ResponseEntity.ok(new MessageResponse("Password has been reset successfully"));
     }
 }
