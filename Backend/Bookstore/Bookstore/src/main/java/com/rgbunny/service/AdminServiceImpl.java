@@ -1,7 +1,9 @@
 package com.rgbunny.service;
 
 import com.rgbunny.dao.UserRepository;
+import com.rgbunny.dtos.UpdateUserRequest;
 import com.rgbunny.dtos.UserResponse;
+import com.rgbunny.entity.AppRole;
 import com.rgbunny.entity.Role;
 import com.rgbunny.entity.User;
 import org.modelmapper.ModelMapper;
@@ -21,14 +23,18 @@ public class AdminServiceImpl implements AdminService {
     @Autowired
     ModelMapper modelMapper;
 
+    private Boolean CheckAdmin(Optional<User> user){
+        String appRoles = user.get().getRoles().stream()
+                .map(role -> role.getRoleName().toString())
+                .collect(Collectors.joining(","));
+        return appRoles.contains("ROLE_ADMIN");
+    }
+
     @Override
     public List<UserResponse> GetAllUsers(Long id) {
         Optional<User> user = userRepository.findById(id);
         if(user.isEmpty()) return null;
-        String appRoles = user.get().getRoles().stream()
-                .map(role -> role.getRoleName().toString())
-                .collect(Collectors.joining(","));
-        if(!appRoles.contains("ROLE_ADMIN")) return null;
+        if(!CheckAdmin(user)) return null;
         return userRepository.findAll().stream()
                 .map(u -> modelMapper.map(u, UserResponse.class))
                 .collect(Collectors.toList());
@@ -86,5 +92,39 @@ public class AdminServiceImpl implements AdminService {
             return user.getUserName().contains(searchTerm);
         }).toList();
         return result;
+    }
+
+    @Override
+    public UserResponse UpdateUserById(Long currentUserId, Long updatedUserID, UpdateUserRequest request) {
+        Optional<User> currentUser = userRepository.findById(currentUserId);
+        if(currentUser.isEmpty()) return null;
+        if(!CheckAdmin(currentUser)) return null;
+        User user = userRepository.findById(updatedUserID)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        if(!user.getUserName().equals(request.getUserName())){
+            if(userRepository.existsByUserName(request.getUserName())) throw new RuntimeException("User name existed");
+        }
+        if(!user.getEmail().equals(request.getEmail())){
+            if(userRepository.existsByEmail(request.getEmail())) throw new RuntimeException("Email existed");
+        }
+        if(!(request.getUserName()==null)) user.setUserName(request.getUserName());
+        if(!(request.getEmail()==null)) user.setEmail(request.getEmail());
+
+        if (request.getRoles() != null && !request.getRoles().isEmpty()) {
+            Set<Role> newRoles = request.getRoles().stream()
+                    .map(roleStr -> {
+                        try {
+                            AppRole appRole = AppRole.valueOf(roleStr);
+                            return new Role(appRole);
+                        } catch (IllegalArgumentException e) {
+                            throw new RuntimeException("Invalid role: " + roleStr);
+                        }
+                    })
+                    .collect(Collectors.toSet());
+            user.setRoles(newRoles);
+        }
+        userRepository.save(user);
+
+        return modelMapper.map(user, UserResponse.class);
     }
 }

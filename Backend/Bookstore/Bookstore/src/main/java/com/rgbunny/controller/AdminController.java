@@ -1,12 +1,10 @@
 package com.rgbunny.controller;
 
+import com.rgbunny.dtos.UpdateUserRequest;
 import com.rgbunny.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/manage")
@@ -42,5 +40,9 @@ public class AdminController {
     @GetMapping("/search/employees")
     public ResponseEntity<?> SearchEmployeesByName(@RequestParam Long userId, @RequestParam String searchTerm){
         return ResponseEntity.ok(adminService.SearchEmployeesByName(userId, searchTerm));
+    }
+    @PatchMapping("/user")
+    public ResponseEntity<?> UpdateUserById(@RequestParam Long currentUserId, @RequestParam Long updatedUserId, @RequestBody UpdateUserRequest updateUserRequest){
+        return ResponseEntity.ok(adminService.UpdateUserById(currentUserId,updatedUserId, updateUserRequest));
     }
 }

@@ -1,5 +1,6 @@
 package com.rgbunny.service;
 
+import com.rgbunny.dtos.UpdateUserRequest;
 import com.rgbunny.dtos.UserResponse;
 import com.rgbunny.entity.User;
 
@@ -12,4 +13,5 @@ public interface AdminService {
     List<UserResponse> SearchUsersByName(Long id, String searchTerm);
     List<UserResponse> SearchEmployeesByName(Long id, String searchTerm);
     List<UserResponse> SearchCustomersByName(Long id, String searchTerm);
+    UserResponse UpdateUserById(Long currentUserId, Long updatedUserID, UpdateUserRequest updateUserRequest);
 }
