@@ -9,4 +9,7 @@ public interface AdminService {
     List<UserResponse> GetAllUsers(Long id);
     List<UserResponse> GetAllCustomers(Long id);
     List<UserResponse> GetAllEmployees(Long id);
+    List<UserResponse> SearchUsersByName(Long id, String searchTerm);
+    List<UserResponse> SearchEmployeesByName(Long id, String searchTerm);
+    List<UserResponse> SearchCustomersByName(Long id, String searchTerm);
 }

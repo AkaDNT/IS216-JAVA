@@ -57,4 +57,34 @@ public class AdminServiceImpl implements AdminService {
         }).toList();
         return employees;
     }
+
+    @Override
+    public List<UserResponse> SearchUsersByName(Long id, String searchTerm) {
+        List<UserResponse> users = GetAllUsers(id);
+        if(searchTerm.isEmpty()) return users;
+        List<UserResponse> result =  users.stream().filter(user -> {
+            return user.getUserName().contains(searchTerm);
+        }).toList();
+        return result;
+    }
+
+    @Override
+    public List<UserResponse> SearchEmployeesByName(Long id, String searchTerm) {
+        List<UserResponse> users = GetAllEmployees(id);
+        if(searchTerm.isEmpty()) return users;
+        List<UserResponse> result =  users.stream().filter(user -> {
+            return user.getUserName().contains(searchTerm);
+        }).toList();
+        return result;
+    }
+
+    @Override
+    public List<UserResponse> SearchCustomersByName(Long id, String searchTerm) {
+        List<UserResponse> users = GetAllCustomers(id);
+        if(searchTerm.isEmpty()) return users;
+        List<UserResponse> result =  users.stream().filter(user -> {
+            return user.getUserName().contains(searchTerm);
+        }).toList();
+        return result;
+    }
 }

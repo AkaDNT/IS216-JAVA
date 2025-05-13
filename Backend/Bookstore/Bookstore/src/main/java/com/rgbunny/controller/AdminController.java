@@ -12,20 +12,35 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/manage")
 public class AdminController {
     @Autowired
-    AdminService profileService;
+    AdminService adminService;
 
     @GetMapping("/get-all-users")
     public ResponseEntity<?> GetAllUsers(@RequestParam Long userId){
-        return ResponseEntity.ok(profileService.GetAllUsers(userId));
+        return ResponseEntity.ok(adminService.GetAllUsers(userId));
     }
 
     @GetMapping("/get-all-customers")
     public ResponseEntity<?> GetAllCustomers(@RequestParam Long userId){
-        return ResponseEntity.ok(profileService.GetAllCustomers(userId));
+        return ResponseEntity.ok(adminService.GetAllCustomers(userId));
     }
 
     @GetMapping("/get-all-employees")
     public ResponseEntity<?> GetAllEmployees(@RequestParam Long userId){
-        return ResponseEntity.ok(profileService.GetAllCustomers(userId));
+        return ResponseEntity.ok(adminService.GetAllCustomers(userId));
+    }
+
+    @GetMapping("/search/users")
+    public ResponseEntity<?> SearchUsersByName(@RequestParam Long userId, @RequestParam String searchTerm){
+        return ResponseEntity.ok(adminService.SearchUsersByName(userId, searchTerm));
+    }
+
+    @GetMapping("/search/customers")
+    public ResponseEntity<?> SearchCustomersByName(@RequestParam Long userId, @RequestParam String searchTerm){
+        return ResponseEntity.ok(adminService.SearchCustomersByName(userId, searchTerm));
+    }
+
+    @GetMapping("/search/employees")
+    public ResponseEntity<?> SearchEmployeesByName(@RequestParam Long userId, @RequestParam String searchTerm){
+        return ResponseEntity.ok(adminService.SearchEmployeesByName(userId, searchTerm));
     }
 }
