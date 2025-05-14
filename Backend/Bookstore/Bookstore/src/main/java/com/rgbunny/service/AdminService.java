@@ -1,17 +1,17 @@
 package com.rgbunny.service;
 
-import com.rgbunny.dtos.UpdateUserRequest;
-import com.rgbunny.dtos.UserResponse;
-import com.rgbunny.entity.User;
+import com.rgbunny.dtos.UpdateUserRequestForAdmin;
+import com.rgbunny.dtos.UserResponseForAdmin;
+import org.springframework.security.core.Authentication;
 
 import java.util.List;
 
 public interface AdminService {
-    List<UserResponse> GetAllUsers(Long id);
-    List<UserResponse> GetAllCustomers(Long id);
-    List<UserResponse> GetAllEmployees(Long id);
-    List<UserResponse> SearchUsersByName(Long id, String searchTerm);
-    List<UserResponse> SearchEmployeesByName(Long id, String searchTerm);
-    List<UserResponse> SearchCustomersByName(Long id, String searchTerm);
-    UserResponse UpdateUserById(Long currentUserId, Long updatedUserID, UpdateUserRequest updateUserRequest);
+    List<UserResponseForAdmin> GetAllUsers(Authentication authentication);
+    List<UserResponseForAdmin> GetAllCustomers(Authentication authentication);
+    List<UserResponseForAdmin> GetAllEmployees(Authentication authentication);
+    List<UserResponseForAdmin> SearchUsersByName(Authentication authentication, String searchTerm);
+    List<UserResponseForAdmin> SearchEmployeesByName(Authentication authentication, String searchTerm);
+    List<UserResponseForAdmin> SearchCustomersByName(Authentication authentication, String searchTerm);
+    UserResponseForAdmin UpdateUserById(Authentication authentication, Long updatedUserID, UpdateUserRequestForAdmin updateUserRequest);
 }

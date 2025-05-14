@@ -1,13 +1,14 @@
 package com.rgbunny.service;
 
 import com.rgbunny.dao.UserRepository;
-import com.rgbunny.dtos.UpdateUserRequest;
-import com.rgbunny.dtos.UserResponse;
+import com.rgbunny.dtos.UpdateUserRequestForAdmin;
+import com.rgbunny.dtos.UserResponseForAdmin;
 import com.rgbunny.entity.AppRole;
 import com.rgbunny.entity.Role;
 import com.rgbunny.entity.User;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,19 +32,20 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public List<UserResponse> GetAllUsers(Long id) {
-        Optional<User> user = userRepository.findById(id);
+    public List<UserResponseForAdmin> GetAllUsers(Authentication authentication) {
+        String userName = authentication.getName();
+        Optional<User> user = userRepository.findByUserName(userName);
         if(user.isEmpty()) return null;
         if(!CheckAdmin(user)) return null;
         return userRepository.findAll().stream()
-                .map(u -> modelMapper.map(u, UserResponse.class))
+                .map(u -> modelMapper.map(u, UserResponseForAdmin.class))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<UserResponse> GetAllCustomers(Long id) {
-        List<UserResponse> users = GetAllUsers(id);
-        List<UserResponse> customers = users.stream().filter(user -> {
+    public List<UserResponseForAdmin> GetAllCustomers(Authentication authentication) {
+        List<UserResponseForAdmin> users = GetAllUsers(authentication);
+        List<UserResponseForAdmin> customers = users.stream().filter(user -> {
             String roles = user.getRoles().stream()
                     .map(role -> role.getRoleName().toString())
                     .collect(Collectors.joining(","));
@@ -53,9 +55,9 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public List<UserResponse> GetAllEmployees(Long id) {
-        List<UserResponse> users = GetAllUsers(id);
-        List<UserResponse> employees = users.stream().filter(user -> {
+    public List<UserResponseForAdmin> GetAllEmployees(Authentication authentication) {
+        List<UserResponseForAdmin> users = GetAllUsers(authentication);
+        List<UserResponseForAdmin> employees = users.stream().filter(user -> {
             String roles = user.getRoles().stream()
                     .map(role -> role.getRoleName().toString())
                     .collect(Collectors.joining(","));
@@ -65,38 +67,39 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public List<UserResponse> SearchUsersByName(Long id, String searchTerm) {
-        List<UserResponse> users = GetAllUsers(id);
+    public List<UserResponseForAdmin> SearchUsersByName(Authentication authentication, String searchTerm) {
+        List<UserResponseForAdmin> users = GetAllUsers(authentication);
         if(searchTerm.isEmpty()) return users;
-        List<UserResponse> result =  users.stream().filter(user -> {
+        List<UserResponseForAdmin> result =  users.stream().filter(user -> {
             return user.getUserName().contains(searchTerm);
         }).toList();
         return result;
     }
 
     @Override
-    public List<UserResponse> SearchEmployeesByName(Long id, String searchTerm) {
-        List<UserResponse> users = GetAllEmployees(id);
+    public List<UserResponseForAdmin> SearchEmployeesByName(Authentication authentication, String searchTerm) {
+        List<UserResponseForAdmin> users = GetAllEmployees(authentication);
         if(searchTerm.isEmpty()) return users;
-        List<UserResponse> result =  users.stream().filter(user -> {
+        List<UserResponseForAdmin> result =  users.stream().filter(user -> {
             return user.getUserName().contains(searchTerm);
         }).toList();
         return result;
     }
 
     @Override
-    public List<UserResponse> SearchCustomersByName(Long id, String searchTerm) {
-        List<UserResponse> users = GetAllCustomers(id);
+    public List<UserResponseForAdmin> SearchCustomersByName(Authentication authentication, String searchTerm) {
+        List<UserResponseForAdmin> users = GetAllCustomers(authentication);
         if(searchTerm.isEmpty()) return users;
-        List<UserResponse> result =  users.stream().filter(user -> {
+        List<UserResponseForAdmin> result =  users.stream().filter(user -> {
             return user.getUserName().contains(searchTerm);
         }).toList();
         return result;
     }
 
     @Override
-    public UserResponse UpdateUserById(Long currentUserId, Long updatedUserID, UpdateUserRequest request) {
-        Optional<User> currentUser = userRepository.findById(currentUserId);
+    public UserResponseForAdmin UpdateUserById(Authentication authentication, Long updatedUserID, UpdateUserRequestForAdmin request) {
+        String currentUserName = authentication.getName();
+        Optional<User> currentUser = userRepository.findByUserName(currentUserName);
         if(currentUser.isEmpty()) return null;
         if(!CheckAdmin(currentUser)) return null;
         User user = userRepository.findById(updatedUserID)
@@ -125,6 +128,6 @@ public class AdminServiceImpl implements AdminService {
         }
         userRepository.save(user);
 
-        return modelMapper.map(user, UserResponse.class);
+        return modelMapper.map(user, UserResponseForAdmin.class);
     }
 }
