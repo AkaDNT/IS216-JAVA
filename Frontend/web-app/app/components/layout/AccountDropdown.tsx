@@ -32,7 +32,9 @@ export default function AccountDropdown({
         onClick={() => setShowDropdown((prev) => !prev)}
       >
         <User size={24} />
-        <span className="text-sm mt-1">Account</span>
+        <span className="text-sm mt-1">
+          {!user ? "Account" : user.userName}
+        </span>
       </div>
 
       {showDropdown && (

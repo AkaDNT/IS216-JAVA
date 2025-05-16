@@ -3,7 +3,7 @@ import ListBooks from "./components/layout/ListBooks";
 import Slider from "./components/layout/Slider";
 
 export default async function Home() {
-  const res = await fetch("http://localhost:8080/api/books");
+  const res = await fetch(`${process.env.API_URL}/books`);
   const books = await res.json();
   return (
     <div>

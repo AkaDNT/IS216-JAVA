@@ -5,6 +5,7 @@ import React, { useState } from "react";
 import { ChevronLeft, ChevronRight, Heart } from "lucide-react";
 import { Book } from "@/app/models/Book";
 import BookImage from "../ui/BookImage";
+import Link from "next/link";
 
 interface Props {
   books: Book[];
@@ -55,7 +56,9 @@ export default function ListBooks({ books }: Props) {
               className="border p-4 rounded-md shadow hover:shadow-lg transition"
             >
               <div className="relative h-140 mb-4">
-                <BookImage title={`${book.title}`}></BookImage>
+                <Link href={`/books/${book.id}`}>
+                  <BookImage title={`${book.title}`} />
+                </Link>
               </div>
               <h3 className="text-lg font-semibold mb-1">{book.title}</h3>
               <p className="text-gray-600 mb-2">{book.author}</p>
