@@ -3,8 +3,11 @@ package com.rgbunny.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Data;
+import org.modelmapper.internal.bytebuddy.implementation.bind.annotation.Default;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "Book")
@@ -68,4 +71,10 @@ public class Book {
     @Size(max = 50, message = "Dimension không được vượt quá 50 ký tự!")
     @Column(name = "dimension")
     private String dimension;
+
+    private Integer quantity = 0;
+    private Double discount = 0.0;
+
+    @OneToMany(mappedBy = "book", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
+    private List<CartItem> books = new ArrayList<>();
 }
