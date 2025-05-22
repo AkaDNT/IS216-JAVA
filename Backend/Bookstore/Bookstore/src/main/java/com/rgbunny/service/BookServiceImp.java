@@ -1,15 +1,18 @@
 package com.rgbunny.service;
 
 import com.rgbunny.dao.BookRepository;
+import com.rgbunny.dtos.BookResponse;
 import com.rgbunny.entity.Book;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.criteria.Path;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -19,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import jakarta.persistence.criteria.Predicate;
+import org.springframework.ui.ModelMap;
 
 
 @Service
@@ -26,31 +30,37 @@ public class BookServiceImp implements BookService {
     @Autowired
     private final BookRepository bookRepository;
 
+    @Autowired
+    ModelMapper modelMapper;
+
     public BookServiceImp(BookRepository bookRepository) {
         this.bookRepository = bookRepository;
     }
 
     @Override
-    public List<Book> getAllBooks() {
-        return bookRepository.findAll();
+    public List<BookResponse> getAllBooks() {
+        return bookRepository.findAll().stream().map(book -> {
+            return modelMapper.map(book, BookResponse.class);
+        }).toList();
     }
 
     @Override
-    public Book getBookById(Long id) {
-        Optional<Book> book = bookRepository.findById(id);
-        return book.orElse(null);
+    public BookResponse getBookById(Long id) {
+        Book book = bookRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException());
+        BookResponse bookResponse = modelMapper.map(book, BookResponse.class);
+        return bookResponse;
     }
 
     @Override
-    public Book createBook(Book book) {
+    public BookResponse createBook(Book book) {
         if(bookRepository.existsByTitle(book.getTitle()))
             throw new IllegalArgumentException("Title đã tồn tại");
         bookRepository.save(book);
-        return book;
+        return modelMapper.map(book, BookResponse.class);
     }
 
     @Override
-    public Book updateBook(Long id, Book updated) {
+    public BookResponse updateBook(Long id, Book updated) {
         Book existing = bookRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy Book với id = " + id));
 
@@ -69,8 +79,8 @@ public class BookServiceImp implements BookService {
             if (updated.getReadingAge() != null) existing.setReadingAge(updated.getReadingAge());
             if (updated.getPages() != null) existing.setPages(updated.getPages());
             if (updated.getDimension() != null) existing.setDimension(updated.getDimension());
-
-            return bookRepository.save(existing);
+            Book book = bookRepository.save(existing);
+            return modelMapper.map(book,BookResponse.class);
         }
         else if (bookRepository.existsByTitle(updated.getTitle())) {
             throw new IllegalArgumentException("Title đã tồn tại");
@@ -78,7 +88,9 @@ public class BookServiceImp implements BookService {
 
         existing.setTitle(updated.getTitle());
 
-        return bookRepository.save(existing);
+        Book book = bookRepository.save(existing);
+
+        return modelMapper.map(book,BookResponse.class);
     }
 
     @Override

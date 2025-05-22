@@ -14,5 +14,5 @@ import java.util.List;
 public class CartResponse {
     private Long cartId;
     private Double totalPrice = 0.0;
-    private List<Book> books = new ArrayList<>();
+    private List<BookResponse> books = new ArrayList<>();
 }

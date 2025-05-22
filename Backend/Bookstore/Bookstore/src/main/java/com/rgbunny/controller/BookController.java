@@ -1,5 +1,6 @@
 package com.rgbunny.controller;
 
+import com.rgbunny.dtos.BookResponse;
 import com.rgbunny.entity.Book;
 import com.rgbunny.service.BookService;
 import jakarta.validation.Valid;
@@ -21,26 +22,25 @@ public class BookController {
     BookService bookService;
 
     @GetMapping()
-    public ResponseEntity<List<Book>> getAllBooks(){
-        List<Book> books = bookService.getAllBooks();
+    public ResponseEntity<List<BookResponse>> getAllBooks(){
+        List<BookResponse> books = bookService.getAllBooks();
         return new ResponseEntity<>(books, HttpStatus.OK);
     }
 
     @GetMapping("/book")
-    public ResponseEntity<Book> getBookById(@RequestParam Long Id){
-        Book book = bookService.getBookById(Id);
-        System.out.println(book);
+    public ResponseEntity<BookResponse> getBookById(@RequestParam Long Id){
+        BookResponse book = bookService.getBookById(Id);
         if(book == null) return  new ResponseEntity<>(HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(book, HttpStatus.OK);
     }
 
     @PostMapping()
-    public Book createBook(@RequestBody @Valid Book book){
+    public BookResponse createBook(@RequestBody @Valid Book book){
         return bookService.createBook(book);
     }
 
     @PatchMapping()
-    public Book updateBook(@RequestParam Long id, @RequestBody Book book){
+    public BookResponse updateBook(@RequestParam Long id, @RequestBody Book book){
         return bookService.updateBook(id, book);
     }
 
