@@ -42,4 +42,9 @@ public class CartController {
         CartResponse cartResponse = cartService.updateBookQuantityInCart(bookId, operation.equalsIgnoreCase("delete")? -1 : 1);
         return new ResponseEntity<>(cartResponse, HttpStatus.OK);
     }
+    @DeleteMapping("carts/book/{bookId}")
+    public ResponseEntity<String> deleteBookInCart(@PathVariable Long bookId){
+        String status = cartService.deleteBookInCart(bookId);
+        return new ResponseEntity<>(status, HttpStatus.OK);
+    }
 }

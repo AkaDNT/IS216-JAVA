@@ -74,6 +74,7 @@ public class CartServiceImpl implements CartService{
         List<CartItem> cartItems = cart.getCartItems();
         Stream<BookResponse> bookStream = cartItems.stream().map(item ->{
             BookResponse map = modelMapper.map(item.getBook(), BookResponse.class);
+            map.setQuantity(item.getQuantity());
             return map;
         });
 
@@ -91,7 +92,9 @@ public class CartServiceImpl implements CartService{
             c.getBook().setQuantity(c.getQuantity());
         });
         List<BookResponse> books = cart.getCartItems().stream().map(ci ->{
-            return modelMapper.map(ci.getBook(), BookResponse.class);
+            BookResponse bookResponse =modelMapper.map(ci.getBook(), BookResponse.class);
+            bookResponse.setQuantity(ci.getQuantity());
+            return bookResponse;
         }).toList();
         cartResponse.setBooks(books);
         return cartResponse;
@@ -122,16 +125,35 @@ public class CartServiceImpl implements CartService{
         cartRepository.save(cart);
 
         CartItem updatedCartItem = cartItemRepository.save(cartItem);
-        if(updatedCartItem.getQuantity() == 0) cartItemRepository.deleteById(updatedCartItem.getCartItemId());
+        if(updatedCartItem.getQuantity() == 0) cartItemRepository.deleteCartItemByCartIdAndBookId(cartId, bookId);
 
         CartResponse cartResponse = modelMapper.map(cart, CartResponse.class);
-        cart.getCartItems().forEach(ci ->{
-            ci.getBook().setQuantity(ci.getQuantity());
-        });
         List<BookResponse> bookResponses = cart.getCartItems().stream().map(ci ->{
-            return modelMapper.map(ci.getBook(), BookResponse.class);
+            BookResponse bookResponse =modelMapper.map(ci.getBook(), BookResponse.class);
+            bookResponse.setQuantity(ci.getQuantity());
+            return bookResponse;
         }).toList();
         cartResponse.setBooks(bookResponses);
         return cartResponse;
+    }
+
+    @Transactional
+    @Override
+    public String deleteBookInCart(Long bookId) {
+        String email = authUtil.loggedInEmail();
+
+        Cart cart = cartRepository.findCartByEmail(email);
+        if(cart == null) throw new ResourceNotFoundException("Cart not found");
+        Long cartId = cart.getCartId();
+
+        Book book = bookRepository.findById(bookId).orElseThrow(() -> new ResourceNotFoundException("Book not found"));
+
+        CartItem cartItem = cartItemRepository.findCartItemByBookIdAndCartId(cartId, bookId);
+        if(cartItem == null) throw new ResourceNotFoundException("Cart item not found");
+
+        cart.setTotalPrice(cart.getTotalPrice() - cartItem.getBookPrice()*cartItem.getQuantity()*(1-cartItem.getDiscount()));
+
+        cartItemRepository.deleteCartItemByCartIdAndBookId(cartId, bookId);
+        return "Book "+book.getTitle()+" removed from cart";
     }
 }
