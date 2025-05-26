@@ -18,5 +18,4 @@ public class UserResponseForAdmin {
     private String userName;
     private String email;
     private Set<Role> roles = new HashSet<>();
-    private List<Address> addresses = new ArrayList<>();
 }

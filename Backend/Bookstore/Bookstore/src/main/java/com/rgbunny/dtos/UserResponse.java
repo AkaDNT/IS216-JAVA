@@ -16,5 +16,5 @@ import java.util.List;
 public class UserResponse {
     private String userName;
     private String email;
-    private List<Address> addresses = new ArrayList<>();
+    private List<AddressDTO> addresses = new ArrayList<>();
 }
