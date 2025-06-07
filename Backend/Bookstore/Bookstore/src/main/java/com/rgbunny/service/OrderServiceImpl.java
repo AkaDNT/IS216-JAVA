@@ -56,7 +56,7 @@ public class OrderServiceImpl implements OrderService{
         order.setEmail(emailId);
         order.setOrderDate(LocalDate.now());
         order.setTotalAmount(cart.getTotalPrice());
-        order.setOrderStatus("Order Accepted !");
+        order.setOrderStatus("Accepted");
         order.setAddress(address);
 
         Payment payment = new Payment(paymentMethod, pgPaymentId, pgStatus, pgResponseMessage, pgName);
@@ -104,5 +104,28 @@ public class OrderServiceImpl implements OrderService{
         orderResponse.setAddressId(addressId);
 
         return orderResponse;
+    }
+
+    @Override
+    public OrderResponse findOrderById(Long id) {
+        return null;
+    }
+
+    @Override
+    public List<OrderResponse> findAllOrder() {
+        List<Order> orders = orderRepository.findAllWithOrderItems();
+        return orders.stream().map(order -> {
+            OrderResponse response = modelMapper.map(order, OrderResponse.class);
+            response.setAddressId(order.getAddress().getId());
+
+            // Map OrderItems → OrderItemResponse
+            response.setOrderItems(
+                    order.getOrderItems().stream()
+                            .map(item -> modelMapper.map(item, OrderItemResponse.class))
+                            .toList()
+            );
+
+            return response;
+        }).toList();
     }
 }

@@ -14,4 +14,5 @@ public interface AdminService {
     List<UserResponseForAdmin> SearchEmployeesByName(Authentication authentication, String searchTerm);
     List<UserResponseForAdmin> SearchCustomersByName(Authentication authentication, String searchTerm);
     UserResponseForAdmin UpdateUserById(Authentication authentication, Long updatedUserID, UpdateUserRequestForAdmin updateUserRequest);
+    String DeleteUserById(Long userId);
 }

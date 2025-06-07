@@ -3,6 +3,7 @@ package com.rgbunny.controller;
 import com.rgbunny.dtos.UpdateUserRequestForAdmin;
 import com.rgbunny.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -45,5 +46,10 @@ public class AdminController {
     @PatchMapping("/user")
     public ResponseEntity<?> UpdateUserById(Authentication authentication, @RequestParam Long updatedUserId, @RequestBody UpdateUserRequestForAdmin updateUserRequest){
         return ResponseEntity.ok(adminService.UpdateUserById(authentication,updatedUserId, updateUserRequest));
+    }
+    @DeleteMapping("/user/{id}")
+    public ResponseEntity<String> DeleteUserById(@PathVariable Long id){
+        adminService.DeleteUserById(id);
+        return new ResponseEntity<>("Delete user successfully", HttpStatus.NO_CONTENT);
     }
 }
