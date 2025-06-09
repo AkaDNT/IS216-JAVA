@@ -12,7 +12,7 @@ export async function getCurrentUser(): Promise<CurrentUser | null> {
   const jwtToken = (await cookies()).get("jwtToken")?.value;
   if (!jwtToken) return null;
 
-  const res = await fetch(`${process.env.API_URL}/account/me`, {
+  const res = await fetch(`${process.env.API_URL}/user/me`, {
     headers: {
       Authorization: `Bearer ${jwtToken}`,
     },

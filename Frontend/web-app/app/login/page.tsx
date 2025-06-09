@@ -37,6 +37,13 @@ export default function LoginPage() {
               className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
+          {/* Forgot Password link */}
+          <p
+            onClick={() => (window.location.href = "/forgot-password")}
+            className="text-sm text-blue-600 text-right hover:underline cursor-pointer"
+          >
+            Forgot password?
+          </p>
           <button
             type="submit"
             className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition duration-200 cursor-pointer"
