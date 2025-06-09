@@ -35,7 +35,7 @@ public class User {
     private String email;
 
     @NotBlank
-    @Size(max = 150, min = 8, message = "Mật khẩu phải lớn hơn 8 và nhỏ hơn 50 ký tự!")
+    @Size(max = 100, min = 6, message = "Mật khẩu phải lớn hơn 6 và nhỏ hơn 100 ký tự!")
     @Column(name = "password")
     private String password;
 

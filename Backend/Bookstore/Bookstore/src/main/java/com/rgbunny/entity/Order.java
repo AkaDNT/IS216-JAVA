@@ -35,7 +35,7 @@ public class Order {
     private Payment payment;
 
     private Double totalAmount;
-    private String orderStatus;
+    private String orderStatus; //ACCEPTED, CANCELED, COMPLETED, SHIPPING
 
     // Reference to Address
     @ManyToOne

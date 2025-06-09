@@ -1,10 +1,10 @@
 package com.rgbunny.service;
 
 import com.rgbunny.dao.*;
-import com.rgbunny.dtos.OrderItemResponse;
-import com.rgbunny.dtos.OrderResponse;
+import com.rgbunny.dtos.*;
 import com.rgbunny.entity.*;
 import com.rgbunny.exceptions.APIException;
+import com.rgbunny.utils.AuthUtil;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderServiceImpl implements OrderService{
@@ -41,6 +42,9 @@ public class OrderServiceImpl implements OrderService{
     @Autowired
     ModelMapper modelMapper;
 
+    @Autowired
+    AuthUtil authUtil;
+
     @Transactional
     @Override
     public OrderResponse placeOrder(String emailId, Long addressId, String paymentMethod, String pgName, String pgPaymentId, String pgStatus, String pgResponseMessage) {
@@ -56,7 +60,7 @@ public class OrderServiceImpl implements OrderService{
         order.setEmail(emailId);
         order.setOrderDate(LocalDate.now());
         order.setTotalAmount(cart.getTotalPrice());
-        order.setOrderStatus("Accepted");
+        order.setOrderStatus("ACCEPTED");
         order.setAddress(address);
 
         Payment payment = new Payment(paymentMethod, pgPaymentId, pgStatus, pgResponseMessage, pgName);
@@ -108,17 +112,26 @@ public class OrderServiceImpl implements OrderService{
 
     @Override
     public OrderResponse findOrderById(Long id) {
-        return null;
+        User user = authUtil.loggedInUser();
+        if(!CheckAdminOrEmployee(user)) throw new RuntimeException("Access denied");
+        Order order = orderRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("Order not found with id "+ id));
+        OrderResponse orderResponse = modelMapper.map(order, OrderResponse.class);
+        orderResponse.setOrderItems(order.getOrderItems().stream().map(oi-> modelMapper.map(oi, OrderItemResponse.class)
+        ).toList());
+        orderResponse.setAddressId(order.getAddress().getId());
+        orderResponse.setPayment(modelMapper.map(order.getPayment(), PaymentResponse.class));
+        return orderResponse;
     }
 
     @Override
     public List<OrderResponse> findAllOrder() {
+        User user = authUtil.loggedInUser();
+        if(!CheckAdminOrEmployee(user)) throw new RuntimeException("Access denied");
         List<Order> orders = orderRepository.findAllWithOrderItems();
         return orders.stream().map(order -> {
             OrderResponse response = modelMapper.map(order, OrderResponse.class);
             response.setAddressId(order.getAddress().getId());
 
-            // Map OrderItems → OrderItemResponse
             response.setOrderItems(
                     order.getOrderItems().stream()
                             .map(item -> modelMapper.map(item, OrderItemResponse.class))
@@ -127,5 +140,40 @@ public class OrderServiceImpl implements OrderService{
 
             return response;
         }).toList();
+    }
+
+    @Override
+    public List<OrderResponse> getAllMyOrder(String email) {
+        List<Order> orders = orderRepository.findAllUsersOrder(email);
+        return orders.stream().map(order -> {
+            OrderResponse response = modelMapper.map(order, OrderResponse.class);
+            response.setAddressId(order.getAddress().getId());
+
+            response.setOrderItems(
+                    order.getOrderItems().stream()
+                            .map(item -> modelMapper.map(item, OrderItemResponse.class))
+                            .toList()
+            );
+
+            return response;
+        }).toList();
+    }
+
+    @Override
+    public OrderResponse updateOrderStatus(Long orderId, UpdateOrderRequest updateOrderRequest) {
+        Order order = orderRepository.findOrderById(orderId);
+        if(order == null) throw new ResourceNotFoundException("Order not found with id: "+orderId);
+        String updatedStatus = updateOrderRequest.getOrderStatus().toUpperCase();
+        if(!updatedStatus.equals("SHIPPING") && !updatedStatus.equals("COMPLETED")) throw new RuntimeException("Invalid order status");
+        order.setOrderStatus(updatedStatus);
+        orderRepository.save(order);
+        return findOrderById(orderId);
+    }
+
+    private Boolean CheckAdminOrEmployee(User user){
+        String appRoles = user.getRoles().stream()
+                .map(role -> role.getRoleName().toString())
+                .collect(Collectors.joining(","));
+        return appRoles.contains("ROLE_ADMIN") || appRoles.contains("ROLE_EMPLOYEE");
     }
 }

@@ -39,4 +39,10 @@ public class OrderController {
         List<OrderResponse> orderResponses = orderService.findAllOrder();
         return new ResponseEntity<>(orderResponses, HttpStatus.OK);
     }
+    @GetMapping("/order/{id}")
+    public ResponseEntity<OrderResponse> getOrderById(@PathVariable Long id){
+        OrderResponse orderResponse = orderService.findOrderById(id);
+        return new ResponseEntity<>(orderResponse, HttpStatus.OK);
+    }
+
 }
