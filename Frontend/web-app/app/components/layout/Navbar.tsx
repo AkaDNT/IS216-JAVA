@@ -4,8 +4,10 @@ import { ShoppingCart, Heart } from "lucide-react";
 import { CurrentUser } from "@/app/actions/getCurrentUser";
 import AccountDropdown from "./AccountDropdown";
 import SearchBar from "../ui/SearchBar";
+import { getTotalCartsItem } from "@/app/actions/cartActions";
 
-export default function Navbar({ user }: { user: CurrentUser | null }) {
+export default async function Navbar({ user }: { user: CurrentUser | null }) {
+  const totalCartsItem = await getTotalCartsItem();
   return (
     <nav className="w-full bg-white shadow-md px-6 py-4 flex items-center justify-between">
       {/* Left: Logo */}
@@ -26,10 +28,19 @@ export default function Navbar({ user }: { user: CurrentUser | null }) {
 
       {/* Right: Icons */}
       <div className="flex space-x-8 items-center relative">
-        <div className="flex flex-col items-center cursor-pointer">
+        <Link
+          href="/my-cart"
+          className="relative flex flex-col items-center cursor-pointer"
+        >
           <ShoppingCart size={24} />
+          {totalCartsItem > 0 && (
+            <span className="absolute -top-1 -right-2 bg-red-500 text-white text-xs font-semibold w-5 h-5 flex items-center justify-center rounded-full">
+              {totalCartsItem}
+            </span>
+          )}
           <span className="text-sm mt-1">Cart</span>
-        </div>
+        </Link>
+
         <div className="flex flex-col items-center cursor-pointer">
           <Heart size={24} />
           <span className="text-sm mt-1">Wishlist</span>

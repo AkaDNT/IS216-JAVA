@@ -1,7 +1,8 @@
 import { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { Heart } from "lucide-react"; // thêm dòng này ở đầu file nếu chưa có
+import { Heart } from "lucide-react";
+import AddToCartSection from "@/app/components/ui/AddToCartSection";
 
 type BookDetailProps = {
   params: { id: string };
@@ -88,9 +89,7 @@ export default async function BookDetailPage(props: BookDetailProps) {
             </ul>
           </div>
 
-          <button className="mt-6 w-full bg-purple-600 text-white py-3 text-lg font-medium rounded-xl shadow hover:bg-purple-700 transition">
-            Add to Cart
-          </button>
+          <AddToCartSection></AddToCartSection>
         </div>
       </div>
     </div>

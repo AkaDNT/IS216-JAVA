@@ -9,11 +9,12 @@ import Link from "next/link";
 
 interface Props {
   books: Book[];
+  title: string;
 }
 
 const ITEMS_PER_PAGE = 4; // mỗi trang hiển thị 4 sản phẩm
 
-export default function ListBooks({ books }: Props) {
+export default function ListBooks({ books, title }: Props) {
   const [currentPage, setCurrentPage] = useState(1);
   const totalPages = Math.ceil(books.length / ITEMS_PER_PAGE);
   // Tính toán phần tử bắt đầu/kết thúc để cắt mảng
@@ -40,7 +41,7 @@ export default function ListBooks({ books }: Props) {
 
   return (
     <div className="mx-auto w-4/5 mt-8 group">
-      <h2 className="text-2xl font-bold mb-4">Selected for you</h2>
+      <h2 className="text-2xl font-bold mb-4">{title}</h2>
 
       <div className="relative">
         {/* Danh sách sản phẩm */}
