@@ -1,6 +1,7 @@
 import React from "react";
 import { getUsersCart } from "../actions/cartActions";
 import Image from "next/image";
+import Link from "next/link";
 
 export default async function MyCartPage() {
   const data = await getUsersCart();
@@ -56,6 +57,12 @@ export default async function MyCartPage() {
             <p className="text-lg font-bold">
               Total: ${data.totalPrice.toFixed(2)}
             </p>
+            <Link
+              href="/order"
+              className="inline-block px-6 py-2 bg-rose-600 text-white font-semibold rounded-xl hover:bg-rose-700 transition"
+            >
+              Order
+            </Link>
           </div>
         </div>
       )}

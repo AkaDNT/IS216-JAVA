@@ -1,11 +1,12 @@
 "use server";
 
 import { cookies } from "next/headers";
+import { UserAddress } from "../models/Address";
 
 export interface CurrentUser {
   userName: string;
   email: string;
-  addresses: [];
+  addresses: UserAddress[];
 }
 
 export async function getCurrentUser(): Promise<CurrentUser | null> {
