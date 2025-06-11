@@ -156,4 +156,10 @@ public class CartServiceImpl implements CartService{
         cartItemRepository.deleteCartItemByCartIdAndBookId(cartId, bookId);
         return "Book "+book.getTitle()+" removed from cart";
     }
+
+    @Override
+    public Integer getTotalCartsItems(String email, Long cartId) {
+        CartResponse cartResponse = getCart(email, cartId);
+        return cartResponse.getBooks().size();
+    }
 }

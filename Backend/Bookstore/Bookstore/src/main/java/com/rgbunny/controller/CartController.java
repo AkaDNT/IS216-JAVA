@@ -47,4 +47,11 @@ public class CartController {
         String status = cartService.deleteBookInCart(bookId);
         return new ResponseEntity<>(status, HttpStatus.OK);
     }
+    @GetMapping("carts/total-items")
+    public Integer getCartsTotalItems(){
+        String userEmail = authUtil.loggedInEmail();
+        Cart cart = cartRepository.findCartByEmail(userEmail);
+        Long cartId = cart.getCartId();
+        return cartService.getTotalCartsItems(userEmail, cartId);
+    }
 }

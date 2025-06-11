@@ -11,4 +11,5 @@ public interface CartService {
     CartResponse updateBookQuantityInCart(Long bookId, int updatedQuantity);
 
     String deleteBookInCart(Long bookId);
+    Integer getTotalCartsItems(String email, Long cartId);
 }
