@@ -18,7 +18,7 @@ export async function loginUser(prevState: unknown, formData: FormData) {
     return { success: false, message: "Invalid credentials" };
   }
 
-  const { jwtToken } = await res.json();
+  const { jwtToken, roles } = await res.json();
   const cookieStore = cookies();
 
   (await cookieStore).set("jwtToken", jwtToken, {
@@ -27,6 +27,6 @@ export async function loginUser(prevState: unknown, formData: FormData) {
     sameSite: "lax",
     maxAge: 60 * 60 * 1, // 1h
   });
-
+  if (roles.includes("ROLE_ADMIN")) redirect("/admin");
   redirect("/");
 }

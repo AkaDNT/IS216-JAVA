@@ -16,3 +16,7 @@ export const orderItemsInCart = async (
 export const getMyOrders = async (): Promise<Order[]> => {
   return await fetchWrapper.get(`/user/my-orders`);
 };
+
+export const getAllOrders = async (): Promise<Order[]> => {
+  return await fetchWrapper.get(`/order`);
+};
