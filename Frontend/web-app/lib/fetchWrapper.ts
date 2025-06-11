@@ -31,6 +31,15 @@ async function post(url: string, body: unknown) {
   return handleResponse(response);
 }
 
+async function postWithoutBody(url: string) {
+  const requestOptions = {
+    method: "POST",
+    headers: await getHeaders(),
+  };
+  const response = await fetch(baseUrl + url, requestOptions);
+  return handleResponse(response);
+}
+
 async function del(url: string) {
   const requestOptions = {
     method: "DELETE",
@@ -74,6 +83,7 @@ async function getHeaders(): Promise<Headers> {
 export const fetchWrapper = {
   get,
   post,
+  postWithoutBody,
   put,
   del,
 };

@@ -1,8 +1,11 @@
-"use server";
+"use client";
+
+import React, { useState } from "react";
 import { CreditCard, Truck } from "lucide-react";
 import { orderItemsInCart } from "../actions/orderActions";
 import { UserAddress } from "../models/Address";
-import SubmitButton from "./SubmitButton";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 type Props = {
   addresses: UserAddress[];
@@ -15,7 +18,14 @@ const paymentMethods = [
 ];
 
 export default function OrderForm({ addresses }: Props) {
-  const handleSubmit = async (formData: FormData) => {
+  const [pending, setPending] = useState(false);
+  const router = useRouter();
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+
     const data = {
       addressId: Number(formData.get("addressId")),
       paymentMethod: formData.get("paymentMethod") as string,
@@ -26,18 +36,27 @@ export default function OrderForm({ addresses }: Props) {
     };
 
     try {
+      setPending(true);
       await orderItemsInCart(data, data.paymentMethod);
-      console.log("Đặt hàng thành công!");
-    } catch (err) {
-      console.error("Có lỗi xảy ra:", err);
+      toast.success("Order placed successfully!");
+      router.push("/order/my-orders");
+    } catch (err: unknown) {
+      const message =
+        err instanceof Error
+          ? err.message
+          : "An error occurred, please try again.";
+      toast.error(message);
+      console.error(err);
+    } finally {
+      setPending(false);
     }
   };
 
   return (
-    <form action={handleSubmit} className="space-y-6">
-      {/* Địa chỉ */}
+    <form onSubmit={handleSubmit} className="space-y-6">
+      {/* Address */}
       <div>
-        <h2 className="text-lg font-semibold mb-2">Chọn địa chỉ</h2>
+        <h2 className="text-lg font-semibold mb-2">Select address</h2>
         {addresses.map((addr) => (
           <label
             key={addr.id}
@@ -62,11 +81,9 @@ export default function OrderForm({ addresses }: Props) {
         ))}
       </div>
 
-      {/* Payment Method */}
+      {/* Payment method */}
       <div>
-        <h2 className="text-lg font-semibold mb-2">
-          Chọn phương thức thanh toán
-        </h2>
+        <h2 className="text-lg font-semibold mb-2">Select payment method</h2>
         <div className="flex gap-4">
           {paymentMethods.map((method) => (
             <label
@@ -95,13 +112,13 @@ export default function OrderForm({ addresses }: Props) {
         </div>
       </div>
 
-      {/* Payment Info Inputs */}
+      {/* Payment-gateway details */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {[
           {
             name: "pgName",
             label: "PG Name",
-            placeholder: "Stripe / Paypal / VNPay...",
+            placeholder: "Stripe / PayPal / VNPay...",
           },
           {
             name: "pgPaymentId",
@@ -132,7 +149,13 @@ export default function OrderForm({ addresses }: Props) {
         ))}
       </div>
 
-      <SubmitButton />
+      <button
+        type="submit"
+        disabled={pending}
+        className="w-full bg-blue-600 text-white py-2 rounded-xl hover:bg-blue-700 transition disabled:bg-gray-400"
+      >
+        {pending ? "Processing..." : "Place Order"}
+      </button>
     </form>
   );
 }

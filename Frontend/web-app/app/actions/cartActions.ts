@@ -1,4 +1,5 @@
-import { fetchWrapper} from "@/lib/fetchWrapper";
+"use server";
+import { fetchWrapper } from "@/lib/fetchWrapper";
 import { CartResponse } from "../models/CartResponse";
 
 export const getTotalCartsItem = async (): Promise<number> => {
@@ -7,4 +8,13 @@ export const getTotalCartsItem = async (): Promise<number> => {
 
 export const getUsersCart = async (): Promise<CartResponse> => {
   return await fetchWrapper.get("/carts/users/cart");
+};
+
+export const addToCart = async (
+  id: string,
+  quantity: number
+): Promise<CartResponse> => {
+  return await fetchWrapper.postWithoutBody(
+    `/carts/books/${id}/quantity/${quantity}`
+  );
 };

@@ -1,17 +1,28 @@
 "use client";
 
+import { addToCart } from "@/app/actions/cartActions";
 import { useState } from "react";
+import toast from "react-hot-toast";
 
-export default function AddToCartSection() {
+interface Props {
+  bookId: string;
+}
+
+export default function AddToCartSection({ bookId }: Props) {
   const [quantity, setQuantity] = useState(1);
 
   const handleQuantityChange = (delta: number) => {
     setQuantity((prev) => Math.max(1, prev + delta));
   };
 
-  const handleAddToCart = () => {
-    // TODO: Gửi request Add to Cart tại đây
-    console.log("Add to cart with quantity:", quantity);
+  const handleAddToCart = async () => {
+    try {
+      const res = await addToCart(bookId, quantity);
+      if ("error" in res) throw new Error("Some error happened");
+      toast.success("Add to cart successful");
+    } catch (err) {
+      toast.error("Error: " + err);
+    }
   };
 
   return (

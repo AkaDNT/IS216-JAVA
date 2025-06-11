@@ -89,7 +89,7 @@ export default async function BookDetailPage(props: BookDetailProps) {
             </ul>
           </div>
 
-          <AddToCartSection></AddToCartSection>
+          <AddToCartSection bookId={book.id}></AddToCartSection>
         </div>
       </div>
     </div>

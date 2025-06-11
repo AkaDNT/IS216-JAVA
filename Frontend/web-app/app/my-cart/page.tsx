@@ -6,14 +6,13 @@ import Link from "next/link";
 export default async function MyCartPage() {
   const data = await getUsersCart();
 
-  if (!data) {
+  if (!data || !Array.isArray(data.books)) {
     return <div className="text-center py-10">Failed to load cart.</div>;
   }
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-10">
       <h1 className="text-2xl font-bold mb-6">Your Shopping Cart</h1>
-
       {data.books.length === 0 ? (
         <p className="text-gray-500">Your cart is currently empty.</p>
       ) : (

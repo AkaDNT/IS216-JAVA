@@ -1,3 +1,4 @@
+"use server";
 import { fetchWrapper } from "@/lib/fetchWrapper";
 import { FieldValues } from "react-hook-form";
 import { Order } from "../models/Order";

@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ShoppingCart, Heart } from "lucide-react";
+import { ShoppingCart, ListOrdered } from "lucide-react";
 import { CurrentUser } from "@/app/actions/getCurrentUser";
 import AccountDropdown from "./AccountDropdown";
 import SearchBar from "../ui/SearchBar";
@@ -42,8 +42,13 @@ export default async function Navbar({ user }: { user: CurrentUser | null }) {
         </Link>
 
         <div className="flex flex-col items-center cursor-pointer">
-          <Heart size={24} />
-          <span className="text-sm mt-1">Wishlist</span>
+          <Link
+            href={"/order/my-orders"}
+            className="flex flex-col items-center cursor-pointer"
+          >
+            <ListOrdered size={24} />
+            <span className="text-sm mt-1">Order History</span>
+          </Link>
         </div>
         <div className="flex flex-col items-center cursor-pointer">
           <AccountDropdown user={user} />
