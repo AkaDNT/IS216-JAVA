@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Heart } from "lucide-react";
 import SearchControls from "./SearchControls";
-import BookImage from "../components/ui/BookImage";
+import BookImage from "@/app/components/ui/BookImage";
 
 interface Book {
   id: number;

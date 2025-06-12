@@ -1,6 +1,6 @@
-import KeyHighlights from "./components/layout/KeyHighlights";
-import ListBooks from "./components/layout/ListBooks";
-import Slider from "./components/layout/Slider";
+import ListBooks from "../components/layout/ListBooks";
+import Slider from "../components/layout/Slider";
+import KeyHighlights from "../components/layout/KeyHighlights";
 
 export default async function Home() {
   const res = await fetch(`${process.env.API_URL}/books`);
@@ -10,7 +10,6 @@ export default async function Home() {
     const dateB = b.publicationDate ? new Date(b.publicationDate).getTime() : 0;
     return dateB - dateA;
   });
-
   return (
     <div>
       <Slider></Slider>

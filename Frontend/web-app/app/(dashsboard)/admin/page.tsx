@@ -1,6 +1,6 @@
 "use server";
 
-import { getAllOrders } from "@/app/actions/orderActions";
+import { getAllOrders } from "@/app/(user)/actions/orderActions";
 import RevenueByDateChart from "./RevenueByDateChart";
 
 export default async function StatisticsPage() {

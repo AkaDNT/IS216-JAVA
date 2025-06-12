@@ -7,6 +7,7 @@ export interface CurrentUser {
   userName: string;
   email: string;
   addresses: UserAddress[];
+  phoneNumber: string;
   roles: string;
 }
 
@@ -30,5 +31,6 @@ export async function getCurrentUser(): Promise<CurrentUser | null> {
     email: data.email,
     addresses: data.addresses,
     roles: data.roles,
+    phoneNumber: data.phoneNumber,
   };
 }

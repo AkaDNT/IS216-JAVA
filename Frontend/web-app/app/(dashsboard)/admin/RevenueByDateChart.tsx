@@ -1,15 +1,14 @@
 "use client";
 
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  Tooltip,
-  CartesianGrid,
-} from "recharts";
-import { Order } from "../models/Order";
-
+import { Order } from "@/app/(user)/models/Order";
+import dynamic from "next/dynamic";
+import { Line, XAxis, YAxis, Tooltip, CartesianGrid } from "recharts";
+const LineChart = dynamic(
+  () => import("recharts").then((mod) => mod.LineChart),
+  {
+    ssr: false,
+  }
+);
 export default function RevenueByDateChart({ orders }: { orders: Order[] }) {
   const revenueMap: Record<string, number> = {};
 

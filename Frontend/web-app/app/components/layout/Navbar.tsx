@@ -1,10 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ShoppingCart, ListOrdered } from "lucide-react";
-import { CurrentUser } from "@/app/actions/getCurrentUser";
 import AccountDropdown from "./AccountDropdown";
 import SearchBar from "../ui/SearchBar";
-import { getTotalCartsItem } from "@/app/actions/cartActions";
+import { getTotalCartsItem } from "@/app/(user)/actions/cartActions";
+import { CurrentUser } from "@/app/(user)/actions/getCurrentUser";
 
 export default async function Navbar({ user }: { user: CurrentUser | null }) {
   const totalCartsItem = await getTotalCartsItem();

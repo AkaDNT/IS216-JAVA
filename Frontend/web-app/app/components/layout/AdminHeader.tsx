@@ -1,11 +1,11 @@
 "use client";
 
-import { CurrentUser } from "@/app/actions/getCurrentUser";
+import { CurrentUser } from "@/app/(user)/actions/getCurrentUser";
 import AccountDropdown from "./AccountDropdown";
 import { CalendarDays } from "lucide-react";
 
 interface Props {
-  currentUser: CurrentUser;
+  currentUser: CurrentUser | null;
 }
 
 export default function AdminHeader({ currentUser }: Props) {
@@ -27,7 +27,7 @@ export default function AdminHeader({ currentUser }: Props) {
         <h1 className="text-xl font-semibold text-gray-800 text-center">
           Welcome{" "}
           <span className="text-purple-700 font-bold">
-            {currentUser.userName}
+            {currentUser?.userName}
           </span>{" "}
           to RGBunny Dashboard
         </h1>

@@ -11,9 +11,9 @@ async function get(url: string) {
   return handleResponse(response);
 }
 
-async function put(url: string, body: unknown) {
+async function patch(url: string, body: unknown) {
   const requestOptions = {
-    method: "PUT",
+    method: "PATCH",
     headers: await getHeaders(),
     body: JSON.stringify(body),
   };
@@ -84,6 +84,6 @@ export const fetchWrapper = {
   get,
   post,
   postWithoutBody,
-  put,
+  patch,
   del,
 };

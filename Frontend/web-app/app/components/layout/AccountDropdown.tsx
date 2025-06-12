@@ -54,7 +54,7 @@ export default function AccountDropdown({
               <button
                 type="button"
                 onClick={() => {
-                  router.push("/profile");
+                  router.push("/account/profile");
                   setShowDropdown(false);
                 }}
                 className="block w-full px-4 py-3 text-left text-sm hover:bg-gray-100 transition-colors cursor-pointer"

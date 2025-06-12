@@ -1,6 +1,6 @@
 "use client";
 
-import { addToCart } from "@/app/actions/cartActions";
+import { addToCart } from "@/app/(user)/actions/cartActions";
 import { useState } from "react";
 import toast from "react-hot-toast";
 

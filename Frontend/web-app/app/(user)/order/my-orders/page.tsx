@@ -1,8 +1,8 @@
 "use server";
-import { getMyOrders } from "@/app/actions/orderActions";
 import React from "react";
 import Image from "next/image";
 import { format } from "date-fns";
+import { getMyOrders } from "../../actions/orderActions";
 
 export default async function OrdersPage() {
   const orders = await getMyOrders();
