@@ -28,13 +28,11 @@ export default async function RootLayout({
             <div className="flex-1 flex flex-col">
               <AdminHeader currentUser={user} />
 
-              <main className="p-6">
-                {/* Nội dung chính ở đây */}
-                <h2 className="text-2xl font-bold">Welcome to RGBunny</h2>
+              <main className="p-6 bg-gradient-to-r from-purple-100 via-rose-100 to-white border-b border-gray-200 shadow-md">
+                {children}
               </main>
             </div>
           </div>
-          {children}
         </body>
       </html>
     );
