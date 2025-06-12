@@ -41,7 +41,7 @@ export default async function OrdersPage() {
                   ${order.totalAmount.toFixed(2)}
                 </p>
                 <span
-                  className={`px-2 py-1 rounded-full text-xs ${
+                  className={`px-2 py-1 font-bold rounded-full text-xs ${
                     order.orderStatus.toLowerCase().includes("accepted")
                       ? "bg-purple-100 text-purple-600"
                       : "bg-rose-100 text-rose-600"

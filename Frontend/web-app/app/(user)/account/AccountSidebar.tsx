@@ -14,8 +14,8 @@ export default function AccountSidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="w-64 bg-white border-r border-gray-200 rounded-l-2xl p-6">
-      <h2 className="text-2xl font-semibold text-rose-600 mb-6">
+    <div className="w-full">
+      <h2 className="text-xl font-semibold text-rose-600 mb-4">
         Account Center
       </h2>
       <nav className="flex flex-col space-y-2">
@@ -34,6 +34,6 @@ export default function AccountSidebar() {
           </Link>
         ))}
       </nav>
-    </aside>
+    </div>
   );
 }

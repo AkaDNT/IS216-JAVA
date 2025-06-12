@@ -46,6 +46,7 @@ export default async function SearchPage({
   const data = await fetchBooks(searchParams);
   const currentPage = data.pageable.pageNumber;
   const totalPages = data.totalPages;
+  console.log(data);
 
   const createPageUrl = (page: number) => {
     const params = new URLSearchParams();

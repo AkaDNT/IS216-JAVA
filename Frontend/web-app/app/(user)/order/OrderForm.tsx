@@ -52,6 +52,25 @@ export default function OrderForm({ addresses }: Props) {
     }
   };
 
+  if (addresses.length === 0) {
+    return (
+      <div className="p-6 border rounded-xl text-center space-y-4 bg-yellow-50 border-yellow-300">
+        <h2 className="text-xl font-semibold text-gray-700">
+          You don&apos;t have any address yet.
+        </h2>
+        <p className="text-gray-600">
+          Please add a delivery address before placing an order.
+        </p>
+        <button
+          onClick={() => router.push("/account/addresses")}
+          className="px-6 py-2 bg-rose-600 text-white rounded-xl hover:bg-rose-700 transition"
+        >
+          Add Address
+        </button>
+      </div>
+    );
+  }
+
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       {/* Address */}
