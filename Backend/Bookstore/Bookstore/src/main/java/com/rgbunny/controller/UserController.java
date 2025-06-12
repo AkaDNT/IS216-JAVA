@@ -1,6 +1,7 @@
 package com.rgbunny.controller;
 
 import com.rgbunny.dtos.OrderResponse;
+import com.rgbunny.dtos.UpdateUserRequest;
 import com.rgbunny.dtos.UserResponse;
 import com.rgbunny.service.OrderService;
 import com.rgbunny.service.UserService;
@@ -9,9 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -39,5 +38,12 @@ public class UserController {
         String email = authUtil.loggedInEmail();
         List<OrderResponse>orderResponses = orderService.getAllMyOrder(email);
         return new ResponseEntity<>(orderResponses, HttpStatus.OK);
+    }
+
+    @PatchMapping("me")
+    public ResponseEntity<UserResponse>UpdateMe(@RequestBody UpdateUserRequest updateUserRequest){
+        UserResponse userResponse = userService.UpdateUser(updateUserRequest);
+        if(userResponse == null) return ResponseEntity.badRequest().build();
+        return new ResponseEntity<>(userResponse, HttpStatus.OK);
     }
 }

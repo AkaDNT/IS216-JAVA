@@ -34,6 +34,11 @@ public class User {
     @Column(name = "email")
     private String email;
 
+    @Size(min = 9, max = 15, message = "Số điện thoại phải có độ dài từ 9 đến 15 ký tự!")
+    @Column(name = "phone_number")
+    private String phoneNumber;
+
+
     @NotBlank
     @Size(max = 100, min = 6, message = "Mật khẩu phải lớn hơn 6 và nhỏ hơn 100 ký tự!")
     @Column(name = "password")

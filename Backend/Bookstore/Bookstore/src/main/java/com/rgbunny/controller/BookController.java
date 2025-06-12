@@ -54,7 +54,7 @@ public class BookController {
                                   @RequestParam Map<String, String> allParams,
                                   @RequestParam(required = false) String sort,
                                   @RequestParam(defaultValue = "0") int page,
-                                  @RequestParam(defaultValue = "16") int size) {
+                                  @RequestParam(defaultValue = "12") int size) {
 
         Map<String, String> filters = allParams.entrySet().stream()
                 .filter(e -> e.getKey().startsWith("filter_"))

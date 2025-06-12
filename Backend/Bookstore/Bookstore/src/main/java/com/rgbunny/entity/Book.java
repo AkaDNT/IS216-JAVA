@@ -1,5 +1,6 @@
 package com.rgbunny.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Data;
@@ -75,6 +76,7 @@ public class Book {
     private Integer quantity = 0;
     private Double discount = 0.0;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "book", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
     private List<CartItem> books = new ArrayList<>();
 }
