@@ -1,14 +1,14 @@
+"use server";
+
 import { getAllBooks } from "@/app/(user)/actions/bookAction";
-import BookTable from "@/app/components/ui/BookTable";
+import BookClientPage from "./BookClientPage";
 import Link from "next/link";
-import { Suspense } from "react";
 
 export default async function BooksPage() {
   const books = await getAllBooks();
 
   return (
     <section className="p-6">
-      {/* Header row */}
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold">All Books</h1>
 
@@ -20,9 +20,7 @@ export default async function BooksPage() {
         </Link>
       </div>
 
-      <Suspense fallback={<p>Loading books...</p>}>
-        <BookTable books={books} />
-      </Suspense>
+      <BookClientPage initialBooks={books} />
     </section>
   );
 }

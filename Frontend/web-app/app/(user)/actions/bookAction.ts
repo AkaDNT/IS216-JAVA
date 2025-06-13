@@ -22,3 +22,7 @@ export const getBookById = async (id: number): Promise<Book> => {
 export const deleteBook = async (id: number) => {
   return await fetchWrapper.del(`/books?id=${id}`);
 };
+
+export const searchBooks = async (searchTerm: string) => {
+  return await fetchWrapper.get(`/books/searchTitle?term=${searchTerm}`);
+};
