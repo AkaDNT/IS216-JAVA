@@ -116,6 +116,20 @@ public class BookServiceImp implements BookService {
         return bookRepository.findAll(spec,pageable);
     }
 
+    @Override
+    public List<BookResponse> searchBooksByTitle(String term) {
+        if (term == null || term.trim().isEmpty()) {
+            return getAllBooks();
+        }
+
+        String normalizedTerm = term.toLowerCase();
+
+        return getAllBooks().stream()
+                .filter(b -> b.getTitle() != null && b.getTitle().toLowerCase().contains(normalizedTerm))
+                .toList();
+    }
+
+
     private Sort parseSort(String sort) {
         if (sort == null || sort.isEmpty()) {
             return Sort.unsorted();

@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.function.EntityResponse;
 
 import java.util.List;
 import java.util.Map;
@@ -54,7 +55,7 @@ public class BookController {
                                   @RequestParam Map<String, String> allParams,
                                   @RequestParam(required = false) String sort,
                                   @RequestParam(defaultValue = "0") int page,
-                                  @RequestParam(defaultValue = "12") int size) {
+                                  @RequestParam(defaultValue = "12 ") int size) {
 
         Map<String, String> filters = allParams.entrySet().stream()
                 .filter(e -> e.getKey().startsWith("filter_"))
@@ -64,5 +65,10 @@ public class BookController {
                 ));
 
         return bookService.searchBooks(searchTerm, filters, sort, page, size);
+    }
+    @GetMapping("/searchTitle")
+    public ResponseEntity<List<BookResponse>> searchBooksByTitle(@RequestParam(required = false) String term) {
+        List<BookResponse> books = bookService.searchBooksByTitle(term);
+        return new ResponseEntity<>(books, HttpStatus.OK);
     }
 }

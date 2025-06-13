@@ -14,4 +14,5 @@ public interface BookService {
     BookResponse updateBook(Long id, Book book);
     void deleteBook(Long id);
     Page<Book> searchBooks(String searchTerm, Map<String, String> filters, String sort, int page, int size);
+    List<BookResponse> searchBooksByTitle(String term);
 }
