@@ -3,6 +3,7 @@ package com.rgbunny.controller;
 import com.rgbunny.dtos.OrderResponse;
 import com.rgbunny.dtos.UpdateUserRequest;
 import com.rgbunny.dtos.UserResponse;
+import com.rgbunny.entity.User;
 import com.rgbunny.service.OrderService;
 import com.rgbunny.service.UserService;
 import com.rgbunny.utils.AuthUtil;
@@ -35,8 +36,8 @@ public class UserController {
 
     @GetMapping("/my-orders")
     public ResponseEntity<List<OrderResponse>>GetMyOrders(){
-        String email = authUtil.loggedInEmail();
-        List<OrderResponse>orderResponses = orderService.getAllMyOrder(email);
+        User user = authUtil.loggedInUser();
+        List<OrderResponse>orderResponses = orderService.getAllMyOrder(user.getId());
         return new ResponseEntity<>(orderResponses, HttpStatus.OK);
     }
 

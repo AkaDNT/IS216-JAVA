@@ -26,7 +26,7 @@ public class AdminController {
 
     @GetMapping("/get-all-employees")
     public ResponseEntity<?> GetAllEmployees(Authentication authentication){
-        return ResponseEntity.ok(adminService.GetAllCustomers(authentication));
+        return ResponseEntity.ok(adminService.GetAllEmployees(authentication));
     }
 
     @GetMapping("/search/users")

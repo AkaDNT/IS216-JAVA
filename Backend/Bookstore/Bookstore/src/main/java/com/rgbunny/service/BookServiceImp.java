@@ -1,6 +1,7 @@
 package com.rgbunny.service;
 
 import com.rgbunny.dao.BookRepository;
+import com.rgbunny.dao.CartItemRepository;
 import com.rgbunny.dtos.BookResponse;
 import com.rgbunny.entity.Book;
 import jakarta.persistence.EntityNotFoundException;
@@ -22,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import jakarta.persistence.criteria.Predicate;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 
 
@@ -29,6 +31,9 @@ import org.springframework.ui.ModelMap;
 public class BookServiceImp implements BookService {
     @Autowired
     private final BookRepository bookRepository;
+
+    @Autowired
+    CartItemRepository cartItemRepository;
 
     @Autowired
     ModelMapper modelMapper;
@@ -94,11 +99,13 @@ public class BookServiceImp implements BookService {
     }
 
     @Override
+    @Transactional
     public void deleteBook(Long id) {
         if (!bookRepository.existsById(id)) {
             throw new EntityNotFoundException("Không tìm thấy Book với id = " + id);
         }
-        bookRepository.deleteById(id);
+        cartItemRepository.deleteCartItemByBookId(id);
+        bookRepository.deleteBookById(id);
     }
 
     @Override

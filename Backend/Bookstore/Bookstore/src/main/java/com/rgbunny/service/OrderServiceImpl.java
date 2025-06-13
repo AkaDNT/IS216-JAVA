@@ -143,8 +143,8 @@ public class OrderServiceImpl implements OrderService{
     }
 
     @Override
-    public List<OrderResponse> getAllMyOrder(String email) {
-        List<Order> orders = orderRepository.findAllUsersOrder(email);
+    public List<OrderResponse> getAllMyOrder(Long id) {
+        List<Order> orders = orderRepository.findAllUsersOrder(id);
         return orders.stream().map(order -> {
             OrderResponse response = modelMapper.map(order, OrderResponse.class);
             response.setAddressId(order.getAddress().getId());

@@ -9,7 +9,7 @@ public interface OrderService {
     OrderResponse placeOrder(String emailId, Long addressId, String paymentMethod, String pgName, String pgPaymentId, String pgStatus, String pgResponseMessage);
     OrderResponse findOrderById(Long id);
     List<OrderResponse> findAllOrder();
-    List<OrderResponse> getAllMyOrder(String email);
+    List<OrderResponse> getAllMyOrder(Long id);
     OrderResponse updateOrderStatus(Long orderId, UpdateOrderRequest updateOrderRequest);
 
 }
