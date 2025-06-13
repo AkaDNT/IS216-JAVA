@@ -1,7 +1,7 @@
 "use server";
+import React from "react";
 import { getAllUsers } from "@/app/(user)/actions/userAction";
-import UserTable from "@/app/components/ui/UserTable";
-import React, { Suspense } from "react";
+import UsersClientPage from "./UsersClientPage";
 
 export default async function UsersPage() {
   const users = await getAllUsers();
@@ -12,9 +12,7 @@ export default async function UsersPage() {
         <h1 className="text-2xl font-bold">All Users</h1>
       </div>
 
-      <Suspense fallback={<p>Loading users...</p>}>
-        <UserTable users={users} />
-      </Suspense>
+      <UsersClientPage initialUsers={users} />
     </section>
   );
 }
