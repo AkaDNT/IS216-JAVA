@@ -11,4 +11,6 @@ export interface Book {
   readingAge: number;
   pages: number;
   dimension: string;
+  quantity: number;
+  discount: number;
 }

@@ -4,11 +4,14 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 
+const navStatistic = [{ label: "Statistics", href: "/admin" }];
+
 const navItems = [
-  { label: "Products", href: "/products" },
-  { label: "Customers", href: "/customers" },
-  { label: "Employee", href: "/employee" },
-  { label: "Orders", href: "/orders" },
+  { label: "Books", href: "/admin/manage-books" },
+  { label: "Users", href: "/admin/manage-users" },
+  { label: "Customers", href: "/admin/manage-customers" },
+  { label: "Employees", href: "/admin/manage-employees" },
+  { label: "Orders", href: "/admin/manage-orders" },
 ];
 
 export default function NavAdmin() {
@@ -19,6 +22,25 @@ export default function NavAdmin() {
       <h2 className="text-2xl font-bold text-purple-700 mb-8">RGBunny</h2>
 
       {/* Main Navigation */}
+      <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">
+        ANALYTICS
+      </h3>
+      <nav className="flex flex-col space-y-1">
+        {navStatistic.map((item) => (
+          <Link
+            key={item.href}
+            href={item.href}
+            className={cn(
+              "px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-200",
+              pathname === item.href
+                ? "bg-purple-200 text-purple-800 shadow-sm"
+                : "text-gray-700 hover:bg-purple-50"
+            )}
+          >
+            {item.label}
+          </Link>
+        ))}
+      </nav>
       <div className="mb-6">
         <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">
           SALES
